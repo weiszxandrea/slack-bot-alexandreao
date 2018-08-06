@@ -7,5 +7,5 @@ admin.autodiscover()
 import hello.views
 
 urlpatterns = [
-    url(r'^slack-bot-alexandreao', hello.views.slack, name='slack'),
+    url(r'^slack-alexandreao', hello.views.slack, name='slack'),
 ]
