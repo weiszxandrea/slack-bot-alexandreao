@@ -13,17 +13,17 @@ bot_oauth_token = environ.get('bot_oauth_token', None)
 slack_client = SlackClient(oauth_token)
 slack_bot = SlackClient(bot_oauth_token)
 
-consumer_key = environ.get('consumer_key', None)
-consumer_secret = environ.get('consumer_secret', None)
-access_token = environ.get('access_token', None)
-access_token_secret = environ.get('access_token_secret', None)
-
-auth = OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = API(auth)
-
 
 def get_trending():
+    consumer_key = environ.get('consumer_key', None)
+    consumer_secret = environ.get('consumer_secret', None)
+    access_token = environ.get('access_token', None)
+    access_token_secret = environ.get('access_token_secret', None)
+
+    auth = OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = API(auth)
+
     woe_id = 1
     trends = api.trends_place(woe_id)
 
@@ -64,9 +64,10 @@ def slack(request):
     req = json.loads(request.body)
     token = req['token']
     if os.environ.get("verification_token") == token:
-        get_channel(request)
+        # get_channel(request)
+        challenge = req['challenge']
     else:
-        pass
+        challenge = "wala"
 
-    return HttpResponse(request)
+    return HttpResponse(challenge, content_type="text/plain")
     # return request
