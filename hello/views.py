@@ -1,9 +1,12 @@
 import json
 import os
+
+from django.http import HttpResponse
+from tweepy import OAuthHandler, API
 from slackclient import SlackClient
 from os import environ
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+# from django.http import HttpResponse
 
 oauth_token = environ.get('oauth_token', None)
 bot_oauth_token = environ.get('bot_oauth_token', None)
@@ -19,51 +22,51 @@ auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = API(auth)
 
-def getTrending():
 
-    WOE_ID = 1
-    trends = api.trends_place(WOE_ID)
+def get_trending():
+    woe_id = 1
+    trends = api.trends_place(woe_id)
 
     trends = json.loads(json.dumps(trends, indent=1))
 
-    trendy = []
+    trend_temp = []
     for trend in trends[0]["trends"]:
-        trendy.append((trend["name"]))
+        trend_temp.append((trend["name"]))
 
-    trending = ', \n'.join(trendy[:10])
+    trending = ', \n'.join(trend_temp[:10])
     return trending
 
 
-def getChannel(request):
+def get_channel(request):
     ch_event = json.loads(request.body)
-    token = ch_event['token']
     channel = ch_event['event']['channel']
     event_text = ch_event['event']['text']
     if "trend" in event_text or "twitter" in event_text:
-        slack_client.api_call(
+        slack_bot.api_call(
             "chat.postMessage",
             channel=channel,
-            text=getTrending(),
+            text=get_trending(),
             icon_emoji=':robot_face:'
         )
     else:
         slack_client.api_call(
             "chat.postMessage",
             channel=channel,
-            text="SORRY",
+            text="Sorry your request cannot be processed",
             icon_emoji=':robot_face:'
         )
 
     return ""
+
 
 @csrf_exempt
 def slack(request):
     req = json.loads(request.body)
     token = req['token']
     if os.environ.get("verification_token") == token:
-        getChannel(request)
+        get_channel(request)
     else:
         pass
 
-    # return HttpResponse("", content_type="text/plain")
-    return request
+    return HttpResponse(request)
+    # return request
