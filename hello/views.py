@@ -1,13 +1,14 @@
 import json
 import os
+from slackclient import SlackClient
 from os import environ
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-SLACK_API_TOKEN = environ.get('SLACK_API_TOKEN', None)
-SLACK_BOT_TOKEN = environ.get('SLACK_BOT_TOKEN', None)
-slack_client = SlackClient(SLACK_API_TOKEN)
-slack_bot = SlackClient(SLACK_BOT_TOKEN)
+oauth_token = environ.get('oauth_token', None)
+bot_oauth_token = environ.get('bot_oauth_token', None)
+slack_client = SlackClient(oauth_token)
+slack_bot = SlackClient(bot_oauth_token)
 
 consumer_key = environ.get('consumer_key', None)
 consumer_secret = environ.get('consumer_secret', None)
@@ -19,7 +20,19 @@ auth.set_access_token(access_token, access_token_secret)
 api = API(auth)
 
 def getTrending():
-    pass
+
+    WOE_ID = 1
+    trends = api.trends_place(WOE_ID)
+
+    trends = json.loads(json.dumps(trends, indent=1))
+
+    trendy = []
+    for trend in trends[0]["trends"]:
+        trendy.append((trend["name"]))
+
+    trending = ', \n'.join(trendy[:10])
+    return trending
+
 
 def getChannel(request):
     ch_event = json.loads(request.body)
@@ -30,11 +43,18 @@ def getChannel(request):
         slack_client.api_call(
             "chat.postMessage",
             channel=channel,
-            text=event_text,
+            text=getTrending(),
+            icon_emoji=':robot_face:'
+        )
+    else:
+        slack_client.api_call(
+            "chat.postMessage",
+            channel=channel,
+            text="SORRY",
             icon_emoji=':robot_face:'
         )
 
-    #return HttpResponse(ch_event, content_type="text/plain")
+    return ""
 
 @csrf_exempt
 def slack(request):
@@ -45,4 +65,5 @@ def slack(request):
     else:
         pass
 
-    #return HttpResponse("", content_type="text/plain")
+    # return HttpResponse("", content_type="text/plain")
+    return request
