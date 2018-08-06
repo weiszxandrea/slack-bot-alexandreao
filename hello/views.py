@@ -64,10 +64,11 @@ def slack(request):
     req = json.loads(request.body)
     token = req['token']
     if os.environ.get("verification_token") == token:
-        # get_channel(request)
-        challenge = req['challenge']
+        get_channel(request)
+        # challenge = req['challenge']
     else:
-        challenge = "wala"
+        word = ""
+        # challenge = "wala"
 
-    return HttpResponse(challenge, content_type="text/plain")
-    # return request
+    return HttpResponse(request)
+    # return HttpResponse(challenge, content_type="text/plain")
