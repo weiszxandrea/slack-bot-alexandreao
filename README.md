@@ -1,3 +1,4 @@
+
 # Python: Getting Started
 
 A barebones Django app, which can easily be deployed to Heroku.
@@ -42,3 +43,5 @@ or
 For more information about using Python on Heroku, see these Dev Center articles:
 
 - [Python on Heroku](https://devcenter.heroku.com/categories/python)
+# slack-bot-alexandreao
+Slack bot that posts Twitter's top ten trending every 24 hours or at command
