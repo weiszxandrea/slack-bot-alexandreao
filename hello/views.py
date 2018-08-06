@@ -49,7 +49,7 @@ def get_channel(request):
             icon_emoji=':robot_face:'
         )
     else:
-        slack_client.api_call(
+        slack_bot.api_call(
             "chat.postMessage",
             channel=channel,
             text="Sorry your request cannot be processed",
