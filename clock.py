@@ -14,11 +14,11 @@ def timed_job():
 """
 
 
-@sched.scheduled_job('cron', day_of_week='mon-sun', hours=8)
+@sched.scheduled_job('cron', day_of_week='mon-sun', hours=9)
 def scheduled_job():
     slack_bot.api_call(
         "chat.postMessage",
-        channel="CBXF4AC7J",
+        channel="CC3NYU3LM",
         text=get_trending(),
         icon_emoji=':robot_face:'
     )
