@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 def slack(request):
     req = json.loads(request.body)
     token = req['token']
-    if os.environ.get("verification_key") == token:
+    if os.environ.get("verification_token") == token:
         challenge = req['challenge']
     else:
         challenge = "Empty challenge"
