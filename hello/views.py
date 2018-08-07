@@ -1,6 +1,6 @@
 import json
 import os
-
+import operator
 from django.http import HttpResponse
 from tweepy import OAuthHandler, API
 from slackclient import SlackClient
@@ -29,11 +29,12 @@ def get_trending():
 
     trends = json.loads(json.dumps(trends, indent=1))
 
-    trend_temp = []
+    trend_temp = {}
     for trend in trends[0]["trends"]:
-        trend_temp.append((trend["name"]))
+        trend_temp[trend["name"]] = trend["tweet_volume"]
+        sorted_temp = sorted(trend_temp.items(), key=operator.itemgetter(1))
 
-    trending = ', \n'.join(trend_temp[:10])
+    trending = ', \n'.join(sorted_temp[:10])
     return trending
 
 
