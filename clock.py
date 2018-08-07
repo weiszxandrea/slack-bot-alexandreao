@@ -3,11 +3,11 @@ from hello.views import slack_bot, get_trending
 
 sched = BlockingScheduler()
 
-@sched.scheduled_job('interval', minutes=2)
+@sched.scheduled_job('interval', minutes=10)
 def timed_job():
     slack_bot.api_call(
          "chat.postMessage",
-         channel="CBXF4AC7J",
+         channel="CC3NYU3LM",
          text=get_trending(),
          icon_emoji=':robot_face:'
      )

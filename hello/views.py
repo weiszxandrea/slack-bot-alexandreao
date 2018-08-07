@@ -28,13 +28,11 @@ def get_trending():
     trends = api.trends_place(woe_id)
 
     trends = json.loads(json.dumps(trends, indent=1))
-
-    trend_temp = {}
+    trend_temp = []
     for trend in trends[0]["trends"]:
-        trend_temp[trend["name"]] = trend["tweet_volume"]
-        sorted_temp = sorted(trend_temp.items(), key=operator.itemgetter(1))
+        trend_temp.append((trend["name"]))
 
-    trending = "Trending: \n" + {k: sorted_temp[k] for k in sorted_temp.keys()[:10]}
+    trending = ', \n'.join(trend_temp[:10])
     return trending
 
 
