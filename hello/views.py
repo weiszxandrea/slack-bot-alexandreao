@@ -32,9 +32,9 @@ def get_trending():
     trend_temp = {}
     for trend in trends[0]["trends"]:
         trend_temp[trend["name"]] = trend["tweet_volume"]
-        sorted_temp = sorted(trend_temp.keys(), key=operator.itemgetter(1))
+        sorted_temp = sorted(trend_temp.items(), key=operator.itemgetter(1))
 
-    trending = {k: sorted_temp[k] for k in sorted_temp.keys()[:10]}
+    trending = "Trending: \n" + {k: sorted_temp[k] for k in sorted_temp.keys()[:10]}
     return trending
 
 
