@@ -5,18 +5,6 @@ from hello.views import slack_bot, get_trending
 
 sched = BlockingScheduler()
 
-#stops the bot from idling
-hostname = urllib2.urlopen("https://slack-bot-alexandreao.herokuapp.com/").read()
-response = os.system("ping -c 1 " + hostname)
-
-@sched.scheduled_job('interval', minutes=15)
-def timed_job():
-    if response == 0:
-        print (hostname+' is up!')
-    else:
-        print (hostname+' is down!')
-
-
 @sched.scheduled_job('interval', minutes=10)
 def timed_job():
     slack_bot.api_call(
@@ -37,5 +25,4 @@ def scheduled_job():
     )
 
 """
-while (True):
-    sched.start()
+sched.start()
